@@ -1,8 +1,13 @@
 import os
 import eel
-
-
 from engine.features import playAssistantSound
+from engine.command import takecommand
+
+
+unused_imports = False
+
+if unused_imports is True:
+    takecommand()
 
 eel.init("www")
 
