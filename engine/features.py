@@ -5,6 +5,11 @@ import eel
 from engine.command import speak
 from engine.config import ASSISTANT_NAME
 import pywhatkit as kit
+import webbrowser
+import sqlite3
+
+con = sqlite3.connect("assistant.db")
+cursor = con.cursor()
 
 # Play assistant sound function
 
@@ -19,12 +24,45 @@ def openCommand(query):
     query = query.replace(ASSISTANT_NAME, "")
     query = query.replace("open", "")
     query.lower()
+    # old code before changes
+    # if query != "":
+    #     speak("Opening"+query)
+    #     os.system("start "+query+".exe")
+    # else:
+    #     speak("not found")
+    app_name = query.strip()
 
-    if query != "":
-        speak("Opening"+query)
-        os.system("start "+query+".exe")
-    else:
-        speak("not found")
+    if app_name != "":
+
+        try:
+            cursor.execute(
+                """SELECT path FROM sys_command WHERE name IN (?)""",
+                (app_name,))
+            results = cursor.fetchall()
+
+            if len(results) != 0:
+                speak("Opening "+query)
+                os.startfile(results[0][0])
+
+            elif len(results) == 0:
+                cursor.execute(
+                    """SELECT url FROM web_command WHERE name IN (?)""",
+                    (app_name,))
+                results = cursor.fetchall()
+
+                if len(results) != 0:
+                    speak("Opening "+query)
+                    webbrowser.open(results[0][0])
+
+                else:
+                    speak("Opening "+query)
+                    try:
+                        os.system("start "+query)
+                    except Exception as e1:
+                        speak(f" Error {e1}: Not found")
+
+        except Exception as e2:
+            speak(f"Error {e2}: Something went wrong")
 
 
 def PlayYoutube(query):
