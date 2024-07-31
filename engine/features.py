@@ -1,12 +1,17 @@
 import os
-import re
+import struct
+import time
 from playsound import playsound
 import eel
+import pyaudio
 from engine.command import speak
 from engine.config import ASSISTANT_NAME
 import pywhatkit as kit
 import webbrowser
 import sqlite3
+from engine.helper import extract_yt_term
+import pvporcupine
+
 
 con = sqlite3.connect("assistant.db")
 cursor = con.cursor()
@@ -71,11 +76,47 @@ def PlayYoutube(query):
     kit.playonyt(search_term)
 
 
-def extract_yt_term(command):
-    # Define Regual expression pattern to capture the song name
-    pattern = r'play\s+(.*?)\s+on\s+youtube'
-    # Use re.search to find the match on the command
-    match = re.search(pattern, command, re.IGNORECASE)
-    # If a match is found, return the extracted song name,
-    # otherwise, return None
-    return match.group(1) if match else None
+def hotword():
+    porcupine = None
+    paud = None
+    audio_stream = None
+    try:
+        # Pre trained keywords
+        porcupine = pvporcupine.create(keywords=["jarvis", "alexa"])
+        paud = pyaudio.PyAudio()
+        audio_stream = paud.open(rate=porcupine.sample_rate,
+                                 channels=1,
+                                 format=pyaudio.paInt16,
+                                 input=True,
+                                 frames_per_buffer=porcupine.frame_length)
+
+        # loop for streaming
+        while True:
+            keyword = audio_stream.read(porcupine.frame_length)
+            keyword = struct.unpack_from("h"*porcupine.frame_length,
+                                         keyword)
+
+            # processing keyword comes from mic
+            keyword_index = porcupine.process(keyword)
+
+            # checking first keyword detected for not
+            if keyword_index >= 0:
+                print("hotword detected")
+
+                # pressing shortcut key win+j
+                import pyautogui as autogui
+                autogui.keyDown("win")
+                autogui.press("j")
+                time.sleep(2)
+                autogui.keyUp("win")
+
+    except Exception as e:
+        if porcupine is not None:
+            porcupine.delete()
+            print(e, "porcupine deleted")
+        if audio_stream is not None:
+            audio_stream.close()
+            print(e, "audio_stream closed")
+        if paud is not None:
+            paud.terminate()
+            print(e, "paud terminated")
