@@ -11,6 +11,7 @@ import webbrowser
 import sqlite3
 from engine.helper import extract_yt_term
 import pvporcupine
+import pyautogui as autogui
 
 
 con = sqlite3.connect("assistant.db")
@@ -93,7 +94,7 @@ def hotword():
         # loop for streaming
         while True:
             keyword = audio_stream.read(porcupine.frame_length)
-            keyword = struct.unpack_from("h"*porcupine.frame_length,
+            keyword = struct.unpack_from("h" * porcupine.frame_length,
                                          keyword)
 
             # processing keyword comes from mic
@@ -104,19 +105,15 @@ def hotword():
                 print("hotword detected")
 
                 # pressing shortcut key win+j
-                import pyautogui as autogui
                 autogui.keyDown("win")
                 autogui.press("j")
                 time.sleep(2)
                 autogui.keyUp("win")
 
-    except Exception as e:
+    except:
         if porcupine is not None:
             porcupine.delete()
-            print(e, "porcupine deleted")
         if audio_stream is not None:
             audio_stream.close()
-            print(e, "audio_stream closed")
         if paud is not None:
             paud.terminate()
-            print(e, "paud terminated")
