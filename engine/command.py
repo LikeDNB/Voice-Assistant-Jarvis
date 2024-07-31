@@ -26,7 +26,7 @@ Tokens\\TTS_MS_RU-RU_IRINA_11.0"
 def speak(text):
     engine = pyttsx3.init('sapi5')
     voices = engine.getProperty('voices')
-    engine.setProperty('voice', voices[1].id)
+    engine.setProperty('voice', voices[0].id)
     engine.setProperty('rate', 170)     # setting up new voice rate
     eel.DisplayMessage(text)
     engine.say(text)
@@ -74,7 +74,7 @@ def allCommands():
             PlayYoutube(query)
         else:
             print("not run")
-    except:
-        print("error")
+    except Exception as e:
+        print("error", e)
 
     eel.ShowHood()

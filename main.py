@@ -1,7 +1,21 @@
 import os
 import eel
-from engine.features import *
-from engine.command import *
+from engine.features import playAssistantSound
+from engine.features import openCommand
+from engine.features import PlayYoutube
+from engine.features import hotword
+from engine.command import speak
+from engine.command import takecommand
+from engine.command import allCommands
+
+unused_imports = False
+if unused_imports is True:
+    openCommand()
+    PlayYoutube()
+    hotword()
+    speak()
+    takecommand()
+    allCommands()
 
 
 def start():

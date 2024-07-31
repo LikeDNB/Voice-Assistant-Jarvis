@@ -1,17 +1,18 @@
+from __future__ import absolute_import
 import os
 import struct
 import time
 from playsound import playsound
 import eel
 import pyaudio
-from engine.command import speak
-from engine.config import ASSISTANT_NAME
 import pywhatkit as kit
 import webbrowser
 import sqlite3
-from engine.helper import extract_yt_term
 import pvporcupine
 import pyautogui as autogui
+from engine.command import speak
+from engine.config import ASSISTANT_NAME
+from engine.helper import extract_yt_term
 
 
 con = sqlite3.connect("assistant.db")
@@ -83,7 +84,12 @@ def hotword():
     audio_stream = None
     try:
         # Pre trained keywords
-        porcupine = pvporcupine.create(keywords=["jarvis", "alexa"])
+        porcupine = pvporcupine.create(keywords=[ASSISTANT_NAME,
+                                                 "picovoice",
+                                                 "ok google",
+                                                 "jarvis",
+                                                 "hey siri",
+                                                 "hey google"])
         paud = pyaudio.PyAudio()
         audio_stream = paud.open(rate=porcupine.sample_rate,
                                  channels=1,
@@ -110,10 +116,11 @@ def hotword():
                 time.sleep(2)
                 autogui.keyUp("win")
 
-    except:
+    except Exception as e:
         if porcupine is not None:
             porcupine.delete()
         if audio_stream is not None:
             audio_stream.close()
         if paud is not None:
             paud.terminate()
+        print(e)
