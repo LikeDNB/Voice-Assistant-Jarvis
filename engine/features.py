@@ -14,6 +14,7 @@ import pyautogui as autogui
 from engine.command import speak
 from engine.config import ASSISTANT_NAME
 from engine.helper import extract_yt_term, remove_words
+from hugchat import hugchat
 
 
 con = sqlite3.connect("assistant.db")
@@ -75,8 +76,8 @@ def openCommand(query):
 
 def PlayYoutube(query):
     search_term = extract_yt_term(query)
-    speak("Playing "+search_term+" on Youtube")
-    kit.playonyt(search_term)
+    speak("Playing " + search_term + " on Youtube")  # type: ignore
+    kit.playonyt(search_term)  # type: ignore
 
 
 def hotword():
@@ -190,3 +191,15 @@ def whatsApp(mobile_no, message, flag, name):
 
     autogui.hotkey('enter')
     speak(jarvis_message)
+
+
+# chat bot huggingface
+def chatBot(query):
+    user_input = query.lower()
+    chatbot = hugchat.ChatBot(cookie_path="engine\\cookies.json")
+    id = chatbot.new_conversation()
+    chatbot.change_conversation(id)
+    response = chatbot.chat(user_input)
+    print(response)
+    speak(response)
+    return response

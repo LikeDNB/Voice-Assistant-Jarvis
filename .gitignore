@@ -3,3 +3,5 @@ assistant.db
 contacts.csv
 __pycache__
 /engine/__pycache__
+*.pyc
+/engine/cookies.json

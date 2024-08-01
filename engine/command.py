@@ -24,12 +24,14 @@ Tokens\\TTS_MS_RU-RU_IRINA_11.0"
 
 
 def speak(text):
+    text = str(text)
     engine = pyttsx3.init('sapi5')
     voices = engine.getProperty('voices')
     engine.setProperty('voice', voices[0].id)
     engine.setProperty('rate', 170)     # setting up new voice rate
     eel.DisplayMessage(text)
     engine.say(text)
+    eel.receiverText(text)
     engine.runAndWait()
 
 
@@ -60,11 +62,17 @@ def takecommand():
 
 
 @eel.expose
-def allCommands():
+def allCommands(message=1):
 
-    try:
+    if message == 1:
         query = takecommand()
         print(query)
+        eel.senderText(query)
+    else:
+        query = message
+        eel.senderText(query)
+
+    try:
 
         if "open" in query:
             from engine.features import openCommand
@@ -74,9 +82,9 @@ def allCommands():
             from engine.features import PlayYoutube
             PlayYoutube(query)
 
-        elif ["send message" in query or
+        elif ("send message" in query or
               "phone call" in query or
-              "video call" in query]:
+              "video call" in query):
             from engine.features import findContact, whatsApp
             flag = ""
             contact_no, name = findContact(query)
@@ -94,7 +102,9 @@ def allCommands():
 
                 whatsApp(contact_no, query, flag, name)
         else:
-            print("not run")
+            from engine.features import chatBot
+            chatBot(query)
+
     except Exception as e:
         print("error", e)
 

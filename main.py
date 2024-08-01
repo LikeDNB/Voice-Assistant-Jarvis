@@ -9,6 +9,7 @@ from engine.command import takecommand
 from engine.command import allCommands
 from engine.features import findContact
 from engine.features import whatsApp
+from engine.features import chatBot
 
 
 unused_imports = False
@@ -21,6 +22,7 @@ if unused_imports is True:
     allCommands()
     findContact()
     whatsApp()
+    chatBot()
 
 
 def start():
