@@ -7,6 +7,9 @@ from engine.features import hotword
 from engine.command import speak
 from engine.command import takecommand
 from engine.command import allCommands
+from engine.features import findContact
+from engine.features import whatsApp
+
 
 unused_imports = False
 if unused_imports is True:
@@ -16,6 +19,8 @@ if unused_imports is True:
     speak()
     takecommand()
     allCommands()
+    findContact()
+    whatsApp()
 
 
 def start():

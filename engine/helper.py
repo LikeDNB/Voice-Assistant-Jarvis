@@ -1,6 +1,6 @@
 import re
 
-from config import ASSISTANT_NAME
+# from config import ASSISTANT_NAME
 
 
 def extract_yt_term(command):

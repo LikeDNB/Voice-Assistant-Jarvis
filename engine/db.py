@@ -1,4 +1,4 @@
-import csv
+# import csv
 import sqlite3
 
 con = sqlite3.connect("assistant.db")
@@ -46,11 +46,11 @@ email VARCHAR(255) NULL)''')
 # con.close()
 
 
-# # insert single contact (Optional)
+# insert single contact (Optional)
 
-# query = "INSERT INTO contacts VALUES (null,'pawan', '1234567890',null)"
-# cursor.execute(query)
-# con.commit()
+query = "INSERT INTO contacts VALUES (null,'Ira', '+4917664740456',null)"
+cursor.execute(query)
+con.commit()
 
 # Search contacts from Database
 
