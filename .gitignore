@@ -1,5 +1,5 @@
 /envassistant
-/assistant.db
-/contacts.csv
+assistant.db
+contacts.csv
 /__pycache__
 /engine/__pycache__
